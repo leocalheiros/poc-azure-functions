@@ -9,5 +9,5 @@ data class UpdateRetailerCreditRequestDto @JsonCreator constructor(
     @JsonProperty("document_number") val documentNumber: String,
     @JsonProperty("document_number_branch") val documentNumberBranch: String,
     @JsonProperty("retailer_document_number") val retailerDocumentNumber: String,
-    @JsonProperty("credit_value") val creditValue: Double
+    @JsonProperty("credit_value") val creditValue: Int
 )

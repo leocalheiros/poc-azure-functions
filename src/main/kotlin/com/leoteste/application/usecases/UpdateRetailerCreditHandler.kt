@@ -16,15 +16,15 @@ class UpdateRetailerCreditHandler(
     fun handle(messageContent: String) = runBlocking {
         try {
             val dto: UpdateRetailerCreditRequestDto = objectMapper.readValue(messageContent)
-            val validationResult = UpdateRetailerCreditValidator.validate(dto);
+            val isValidResult = UpdateRetailerCreditValidator.validate(dto);
 
-            if (!validationResult.isValid) {
+            if (!isValidResult) {
                 println("Validation failed");
                 return@runBlocking;
             }
 
             val (documentNumber, updateDto) = updateRetailerCreditMapper.map(dto)
-            serviceBusSenderService.sendMessage("tmp-db1-leonardo-marketplaceupdateprice", documentNumber, updateDto)
+            serviceBusSenderService.sendMessage("tmp-db1-leonardo-marketplacenotifyneworderqueue", documentNumber, updateDto)
         } catch (e: Exception) {
             println("Erro de desserialização: ${e.message}")
         }

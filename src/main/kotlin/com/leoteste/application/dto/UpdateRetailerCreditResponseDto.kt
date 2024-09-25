@@ -6,7 +6,7 @@ data class UpdateRetailerCreditResponseDto(
 )
 
 data class InformacoesAdicionaisItems(
-    val valor: Double
+    val valor: Int
 )
 
 data class RequestParamsItems(
