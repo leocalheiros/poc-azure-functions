@@ -1,8 +1,9 @@
 package com.leoteste
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.leoteste.application.usecases.UpdateProductPriceHandler
 import com.leoteste.application.usecases.UpdateRetailerCreditHandler
-import com.leoteste.application.usecases.UpdateRetailerCreditValidator
+import com.leoteste.infra.mapper.UpdateProductPriceMapper
 import com.leoteste.infra.mapper.UpdateRetailerCreditMapper
 import com.leoteste.infra.services.ServiceBusSenderService
 import com.microsoft.azure.functions.ExecutionContext
@@ -12,24 +13,39 @@ import com.microsoft.azure.functions.annotation.ServiceBusQueueTrigger
 class FunctionsHandler {
 
     private val serviceBusSenderService = ServiceBusSenderService()
-    private val updateRetailerCreditMapper = UpdateRetailerCreditMapper()
     private val objectMapper = ObjectMapper()
-    private val handler = UpdateRetailerCreditHandler(updateRetailerCreditMapper, serviceBusSenderService, objectMapper)
+    private val updateRetailerCreditMapper = UpdateRetailerCreditMapper()
+    private val updateProductPriceMapper = UpdateProductPriceMapper()
+    private val updateRetailerCreditHandler = UpdateRetailerCreditHandler(updateRetailerCreditMapper, serviceBusSenderService, objectMapper)
+    private val updateProductPriceHandler = UpdateProductPriceHandler(updateProductPriceMapper, serviceBusSenderService, objectMapper)
 
-    @FunctionName("ServiceBusQueueTrigger")
-    fun run(
+    @FunctionName("poc-marketplace-update-retailer-credit")
+    fun runUpdateRetailerCredit(
         @ServiceBusQueueTrigger(
             name = "message",
-            queueName = "nome_da_Fila",
+            queueName = "tmp-db1-coreupdateretailercredit",
             connection = "AzureWebJobsStorage"
-        ) message: String?,
+        ) message: String,
         context: ExecutionContext
     ) {
-        context.logger.info("Kotlin Service Bus Queue trigger function executed.")
+        context.logger.info("Update retailer credit function has triggered")
         context.logger.info(message)
 
-        message?.let {
-            handler.handle(it)
-        } ?: context.logger.warning("Received null message")
+        updateRetailerCreditHandler.handle(message);
+    }
+
+    @FunctionName("poc-marketplace-update-product-price")
+    fun runUpdatePrice(
+        @ServiceBusQueueTrigger(
+            name = "message",
+            queueName = "tmp-db1-leonardo-corequeueupdateprice",
+            connection = "AzureWebJobsStorage"
+        ) message: String,
+        context: ExecutionContext
+    ) {
+        context.logger.info("Update product price function has triggered")
+        context.logger.info(message)
+
+        updateProductPriceHandler.handle(message);
     }
 }
