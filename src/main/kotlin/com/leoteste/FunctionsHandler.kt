@@ -14,12 +14,15 @@ class FunctionsHandler {
     private val serviceBusSenderService = ServiceBusSenderService()
     private val updateRetailerCreditMapper = UpdateRetailerCreditMapper()
     private val objectMapper = ObjectMapper()
-    private val validator = UpdateRetailerCreditValidator()
-    private val handler = UpdateRetailerCreditHandler(updateRetailerCreditMapper, serviceBusSenderService, objectMapper, validator)
+    private val handler = UpdateRetailerCreditHandler(updateRetailerCreditMapper, serviceBusSenderService, objectMapper)
 
     @FunctionName("ServiceBusQueueTrigger")
     fun run(
-        @ServiceBusQueueTrigger(name = "message", queueName = "nomeDaFila", connection = "AzureWebJobsStorage") message: String?,
+        @ServiceBusQueueTrigger(
+            name = "message",
+            queueName = "nome_da_Fila",
+            connection = "AzureWebJobsStorage"
+        ) message: String?,
         context: ExecutionContext
     ) {
         context.logger.info("Kotlin Service Bus Queue trigger function executed.")

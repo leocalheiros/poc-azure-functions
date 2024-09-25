@@ -10,16 +10,15 @@ import kotlinx.coroutines.runBlocking
 class UpdateRetailerCreditHandler(
     private val updateRetailerCreditMapper: UpdateRetailerCreditMapper,
     private val serviceBusSenderService: ServiceBusSenderService,
-    private val objectMapper: ObjectMapper,
-    private val validator: UpdateRetailerCreditValidator
+    private val objectMapper: ObjectMapper
 ) {
 
     fun handle(messageContent: String) = runBlocking {
         try {
             val dto: UpdateRetailerCreditRequestDto = objectMapper.readValue(messageContent)
-            val validationResult = validator.validateRequest().validate(dto);
+            val validationResult = UpdateRetailerCreditValidator.validate(dto);
 
-            if(!validationResult.isValid){
+            if (!validationResult.isValid) {
                 println("Validation failed");
                 return@runBlocking;
             }
