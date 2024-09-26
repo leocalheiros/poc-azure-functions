@@ -12,6 +12,11 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.9.10"
     id "org.jetbrains.kotlin.plugin.serialization" version "1.9.10"
 }
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
 apply plugin: "java"
 apply plugin: 'kotlin'
 
@@ -26,9 +31,13 @@ dependencies {
     implementation("org.valiktor:valiktor-core:0.12.0")
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+"
     testImplementation 'org.mockito:mockito-core:2.23.4'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    testImplementation "org.mockito:mockito-inline:5.0.0"
 }
 
 
@@ -51,5 +60,5 @@ azurefunctions {
     // localDebug = "transport=dt_socket,server=y,suspend=n,address=5005"
 }
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(11)
 }
